@@ -2,5 +2,5 @@ Key Schedule Design
 -Input = key, # of Rounds
  -roundKeys array stored in Heap or changed to queue (currently fixed sized array)
  -Generate round 1 and 2 keys (as is done currently)
- -Permute previous 2 rounds keys to generate next 2 rounds keys (as per Nemo-Notes-1)
+ -Left shift then Permute previous 2 rounds keys to generate next 2 rounds keys (as per Nemo-Notes-1)
  -Repeat until N keys generated

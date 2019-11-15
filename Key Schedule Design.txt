@@ -1,6 +1,13 @@
 Key Schedule Design
 -Input = key, # of Rounds
- -roundKeys array stored in Heap or changed to queue (currently fixed sized array)
- -Generate round 1 and 2 keys (as is done currently)
+ -roundKeys array stored in vector(currently fixed sized array)
+ -Initial permutations stored in array of size 2
+ -For loop for N rounds
+ 	-take half keys from previous round
+ 	-Shift,add,restrict
+ 	-store as half keys for next round
+ 	-XOR half keys together
+ 	-roundKeyPermute result
+ 	-store in roundKeys vector
  -Left shift then Permute previous 2 rounds keys to generate next 2 rounds keys (as per Nemo-Notes-1)
  -Repeat until N keys generated

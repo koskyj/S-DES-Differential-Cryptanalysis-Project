@@ -235,7 +235,7 @@ void analyze() {
 //	cout << "Expected subkey: " << roundKeys[1] << endl;
 //	cout << "Guessed subkey: " << r2keyguess << endl;
 
-	if (roundKeys[1] == r2keyguess) {
+	if (roundKeys.at(1) == r2keyguess) {
 		cout << "Guess successful." << endl;
 	}
 	// if this is working, replace key comparator with loop to guess the 4 full key options

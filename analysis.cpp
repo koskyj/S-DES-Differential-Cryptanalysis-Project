@@ -4,6 +4,7 @@
 #include "definitions.h"
 #include "handlers.h"
 #include <iostream>
+#include <vector>
 #define EXTERN extern
 #include "globals.h"
 using namespace std;
@@ -153,7 +154,7 @@ void analyze() {
 	printDifferencePairTable();
 	
 	findBestDifferencePairs();
-	
+
 	cout << "The highest value detected is " << diffPairTable[bestRow][bestCol] << " in row " << bestRow << ", column " << bestCol  << "." << endl;
 	
 	int initialPermutation[] = { 7, 6, 4, 0, 2, 5, 1, 3 };
@@ -204,14 +205,15 @@ void analyze() {
 			x1s = invSbox(y1, Sbox0);
 			x2s = invSbox(y2, Sbox1);
 
-
 			for (int k = 0; k < 64; k++) {
 				for (int i = 0; i < 4; i++) {
-					if (k == x1s[i] ^ w1) {
+					if (k == (x1s[i] ^ w1)) {
 						// Test keys
+						cout << "potentialKeysL[k]" << potentialKeysL[k] << endl;
 						potentialKeysL[k]++; // make half key tables
 					}
-					if (k == x2s[i] ^ w2) {
+					if (k == (x2s[i] ^ w2)) {
+                        cout << "potentialKeysR[k]" << potentialKeysR[k] << endl;
 						potentialKeysR[k]++;
 					}
 				}
@@ -232,8 +234,8 @@ void analyze() {
 		}
 	}
 
-//	cout << "Expected subkey: " << roundKeys[1] << endl;
-//	cout << "Guessed subkey: " << r2keyguess << endl;
+    cout << "Expected subkey: " << roundKeys[1] << endl;
+    cout << "Guessed subkey: " << r2keyguess << endl;
 
 	if (roundKeys[1] == r2keyguess) {
 		cout << "Guess successful." << endl;
@@ -270,4 +272,124 @@ void analyze() {
 	else {
 		cout << "No valid keys found :(" << endl;
 	}
+	cout << endl;
+	cout << "**** Key voting ****" << endl;
+	keyVoting();
+}
+
+void keyVoting() {
+    int w1, w2, deltaw, x1, x2, x1prime, x2prime, deltax, y1, y2, deltay, y1prime, y2prime, deltayprime;
+    int countHit = 0;
+    int countTotal = 0;
+    vector<int> votedKeys;
+
+    //Get current round keys
+    for (int i = 0; i < NUM_ROUNDS; i++) {
+        cout << "Round key[" << i << "]: " << roundKeys[i] << endl;
+
+        int initialPermutation[] = {7, 6, 4, 0, 2, 5, 1, 3};
+
+        for (int j = 0; j < 16; j++) {
+            for (int k = 0; k < 16; k++) {
+                //Initial permutation of input 1 j
+                int roundIn1 = bitChange(j, initialPermutation, 8);
+                //Seperate input 1 j to left and right sides
+                int LR1[] = {0, 0};
+                //Left half input 1
+                LR1[0] = roundIn1 >> 4;
+                //Right half input 1
+                LR1[1] = roundIn1 & 0x0f;
+                w1 = LR1[0];
+
+                //Initial permutation of input 1 k
+                int roundIn2 = bitChange(k, initialPermutation, 8);
+                //Seperate input 2 k to left and right sides
+                int LR2[] = {0, 0};
+                //Left half input 2
+                LR2[0] = roundIn2 >> 4;
+                //Right half input 2
+                LR2[1] = roundIn2 & 0x0f;
+                w2 = LR2[1];
+
+                //Use two inputs and found ws to find deltaw
+                deltaw = (w1 ^ w2);
+
+                //Use two inputs and round key to find x1 and x2
+                x1 = (w1 ^ roundKeys[i]);
+                x2 = (w2 ^ roundKeys[i]);
+
+                //Use two inputs and Sboxes to find y1 and y1
+                y1 = SboxOut(x1, Sbox0);
+                y2 = SboxOut(x2, Sbox1);
+
+                //Use two inputs and found ys to find deltay using XOR
+                deltay = (y1 ^ y2);
+
+                //Iterate through 256 possible keys
+                for (int l = 0; l < 256; l++) {
+                    //XOR w1 with guess of key to get x1 prime
+                    x1prime = (w1 ^ l);
+                    //XOR w2 with guess of key to get x2 prime
+                    x2prime = (w2 ^ l);
+                    //Use two inputs and Sboxes to find x1prime and x2prime
+                    y1prime = SboxOut(x1prime, Sbox0);
+                    y2prime = SboxOut(x2prime, Sbox1);
+                    //Use two inputs and found y primes to find deltay using XOR
+                    deltayprime = (y1prime ^ y2prime);
+
+                    //Is deltayprime found with the test key the same as deltay with round key
+                    if (deltayprime == deltay) {
+                        //If so push that test key to vector votedKeys
+                        votedKeys.push_back(l);
+                        //Increment count of keys that hit
+                        countHit++;
+                    }
+                    //Increment count of total keys tested
+                    countTotal++;
+                }
+            }
+        }
+
+        //Find hit counts for all tested keys
+        int max = 0;
+        //Vector that saves count hits for each test keys, index indicates tested key
+        vector<int> keyCount;
+
+        int temp = 0;
+        for (int m = 0; m < 256; m++) {
+            for (int n = 0; n < votedKeys.size(); n++) {
+                if (votedKeys[n] == m) {
+                    temp++;
+                }
+            }
+            //Push hit count of test key m to keyCount
+            keyCount.push_back(temp);
+            //Find highest hit count of all test keys
+            if (temp >= max) {
+                max = temp;
+            }
+            temp = 0;
+        }
+
+        //Find all test keys that are hit the maximum amount of times and push to maxKeys vector
+        vector<int> maxKeys;
+        for (int o = 0; o < 256; o++) {
+            if (keyCount[o] == max) {
+                maxKeys.push_back(o);
+            }
+        }
+
+        //Print out all keys voted the highest amount of times
+        cout << "Keys voted the highest value of " << max << " are:" << endl;
+        cout << "[";
+        for (int p = 0; p < maxKeys.size(); p++) {
+            if (p == (maxKeys.size()-1)) {
+                cout << maxKeys[p];
+            } else {
+                cout << maxKeys[p] << " ";
+            }
+        }
+        cout << "]" << endl;
+        cout << endl;
+    }
 }

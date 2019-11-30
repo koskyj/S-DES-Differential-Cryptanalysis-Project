@@ -1,5 +1,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
+#include <vector>
 
 EXTERN int key;
 EXTERN bool loopCondition;
@@ -12,7 +13,7 @@ EXTERN int bestCol;
 EXTERN double highestProb;
 EXTERN int inputCharacteristic;
 EXTERN int outputCharacteristic;
-EXTERN int roundKeys[2];
+EXTERN std::vector<int> roundKeys;
 EXTERN int potentialKeysL[64];
 EXTERN int potentialKeysR[64];
 EXTERN int encryptedPairs[256];

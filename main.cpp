@@ -21,6 +21,8 @@ int main() {
 	init();
 	int menuChoice;
 	cout << "Welcome!" << endl;
+	// setKey();
+	// encrypt_data();
 	while (loopCondition) {
 		printMenu();
 		cin >> menuChoice;

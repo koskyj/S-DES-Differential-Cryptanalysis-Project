@@ -8,4 +8,5 @@ void totalDifferenceDistribution();
 void findBestDifferencePairs(); 
 void analyze();
 void keyVoting();
+void checkTestKeys();
 #endif

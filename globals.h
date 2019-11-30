@@ -16,6 +16,7 @@ EXTERN int roundKeys[2];
 EXTERN int potentialKeysL[64];
 EXTERN int potentialKeysR[64];
 EXTERN int encryptedPairs[256];
+EXTERN std::vector<std::vector<int> > testKeys;
 //EXTERN int round1Input;
 //EXTERN int round1OutputCurrent;
 //EXTERN int round1Output;

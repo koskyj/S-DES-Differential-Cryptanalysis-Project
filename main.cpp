@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+#include <vector>
 #include "analysis.h"
 #include "encryption.h"
 #include "handlers.h"

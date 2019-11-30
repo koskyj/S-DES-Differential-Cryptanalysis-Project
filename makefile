@@ -14,4 +14,4 @@ handlers.o: handlers.cpp handlers.h user_interface.h analysis.h encryption.h def
 user_interface.o: user_interface.cpp user_interface.h handlers.h definitions.h globals.h analysis.h
 
 clean:
-	del /f *.o *.exe
+	del /f *.o *.exe *.gch

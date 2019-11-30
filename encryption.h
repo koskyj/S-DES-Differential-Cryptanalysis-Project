@@ -2,11 +2,11 @@
 #define ENCRYPTION_H
 
 // key scheduling
-void keySchedule(int, int numRounds = 2);
+void keySchedule(int);
 int roundKeyPermute(int);
 
 // encryption proper
-int encrypt(int, int numRounds = 2);
+int encrypt(int);
 int feistel(int, int);
 
 // others

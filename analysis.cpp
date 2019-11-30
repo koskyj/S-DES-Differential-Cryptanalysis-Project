@@ -285,7 +285,7 @@ void keyVoting() {
     vector<int> votedKeys;
 
     //Get current round keys
-    for (int i = 0; i < NUM_ROUNDS; i++) {
+    for (int i = 0; i < numRounds; i++) {
 
         //From encryption.cpp
         int initialPermutation[] = {7, 6, 4, 0, 2, 5, 1, 3};
@@ -403,7 +403,7 @@ void keyVoting() {
 void checkTestKeys() {
     cout << "***** Checking key voting *****" << endl;
     bool hit = false;
-    for (int i=0; i<NUM_ROUNDS; i++) {
+    for (int i=0; i<numRounds; i++) {
         for (int j=0; j<testKeys[i].size(); j++) {
             if (roundKeys[i] == testKeys[i][j]) {
                 hit = true;

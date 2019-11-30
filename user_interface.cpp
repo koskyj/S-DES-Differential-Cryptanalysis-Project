@@ -17,6 +17,24 @@ void setKey() {
 	cin >> temp; //assumes key is properly input
 	key = binaryStringToInt(temp);
 
+	bool validInput = false;
+	string numRoundString;
+	int numRoundInput;
+
+  	while(true){
+		cout << "Please enter number of rounds of encryption as an integer value (>2): " << flush;
+		cin >> numRoundString;
+
+		numRoundInput = stoi(numRoundString);
+
+		if(numRoundInput >= 2){
+			numRounds = numRoundInput;
+			break;
+		}
+
+		cout << "Please enter a value greater than 2." << endl;
+	}
+
 	if (DEBUG) {
 		cout << "Debug: key (hex) = " << hex << key << endl;
 	}

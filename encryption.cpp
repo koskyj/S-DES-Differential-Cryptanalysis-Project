@@ -24,7 +24,7 @@ int roundKeyPermute(int keyIn) {	// OK
 	return permuted;
 }
 
-void keySchedule(int key, int numRounds) {	// OK
+void keySchedule(int key) {	// OK
 							// apply initial permutation to key
 	int originalKey = key;
 	int permutedKey1 = 0; //C0
@@ -77,43 +77,6 @@ void keySchedule(int key, int numRounds) {	// OK
 		//Actually select the bits for the round keys
 		roundKeys.push_back(roundKeyPermute(roundikey));
 	}
-
-	// -- PREVIOUS SCHEDULER CODE -- WILL BE REMOVED -- BEGIN
-	// // Shift left once for first round
-	// // Looks like the MSB is dropped instead of circular shift
-	// halfkeys1[0] <<= 1;
-	// halfkeys1[1] <<= 1;
-	// // Nemo 8/25/18
-	// halfkeys1[0] += halfkeys1[0] >> 5;	// add bit shifted out left
-	// halfkeys1[1] += halfkeys1[0] >> 5;	// add bit shifted out left
-	// halfkeys1[0] &= 0x1f;	// restrict to lower 5 bits
-	// halfkeys1[1] &= 0x1f;	// restrict to lower 5 bits
-
-	// // Shift left twice for second round
-	// int halfkeys2[2] = { halfkeys1[0], halfkeys1[1] };
-	// halfkeys2[0] <<= 2;
-	// halfkeys2[1] <<= 2;
-	// halfkeys2[0] += halfkeys2[0] >> 5;	// add bits shifted out left
-	// halfkeys2[1] += halfkeys2[0] >> 5;	// add bits shifted out left
-	// halfkeys2[0] &= 0x1f;	// restrict to lower 5 bits
-	// halfkeys2[1] &= 0x1f;	// restrict to lower 5 bits
-
-	// if (DEBUG) {
-	// 	cout << "Debug: Permuted keys: (hex): " << endl;
-	// 	cout << "\t C1 (hex) = " << hex << halfkeys1[0] << endl
-	// 		<< "\t D1 (hex) = " << hex << halfkeys1[1] << endl
-	// 		<< "\t C2 (hex) = " << hex << halfkeys2[0] << endl
-	// 		<< "\t D2 (hex) = " << hex << halfkeys2[1] << endl;
-	// }
-
-	// // Combine halfkeys into full keystate to get round keys
-	// int round1key = (halfkeys1[0] << 5) | halfkeys1[1];
-	// int round2key = (halfkeys2[0] << 5) | halfkeys2[1];
-
-	// // Actually select the bits for the round keys
-	// roundKeys[0] = roundKeyPermute(round1key);
-	// roundKeys[1] = roundKeyPermute(round2key);
-	// -- PREVIOUS SCHEDULER CODE -- WILL BE REMOVED -- END
 
 	if (DEBUG) {
 		cout << "Debug: Round keys: (hex): " << endl;
@@ -174,7 +137,7 @@ int feistel(int rightHalf, int key) {	// OK
 	return permuted;
 }
 
-int encrypt(int input, int numRounds) {
+int encrypt(int input) {
 
 	int initialPermutation[] = { 7, 6, 4, 0, 2, 5, 1, 3 };
 	int invInitialPermutation[] = { 3, 6, 4, 7, 2, 5, 1, 0 };
@@ -219,26 +182,22 @@ int encrypt(int input, int numRounds) {
 
 void encrypt_data() { // ideally would be able to break larger inputs into byte-sized blocks
 	string plaintextString;
-	string numRoundString;
-
+	
 	int plaintextInt = 0;
-	int numRounds = 2;
-
+	
 	cout << "Enter plaintext as binary 8 bit value: " << flush;
 	cin >> plaintextString;
 
-	cout << "Enter number of encryption rounds as an integer value (Default = 2): " << flush;
-	cin >> numRoundString;
 	// string to character array, then 
 	plaintextInt = binaryStringToInt(plaintextString);
-	numRounds = stoi(numRoundString);
+	
 	if (DEBUG) {
 		cout << "encrypt_data: " << endl
 			 << "plaintext entered: " << plaintextString << endl
 			 << "plaintext as integer: " << dec << plaintextInt << endl;
 	}
 
-	keySchedule(key, numRounds);
-	int ciphertextInt = encrypt(plaintextInt, numRounds);
+	keySchedule(key);
+	int ciphertextInt = encrypt(plaintextInt);
 	cout << "Ciphertext (hex) = " << hex << ciphertextInt << endl;
 }

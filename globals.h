@@ -13,6 +13,7 @@ EXTERN int bestCol;
 EXTERN double highestProb;
 EXTERN int inputCharacteristic;
 EXTERN int outputCharacteristic;
+EXTERN int numRounds;
 EXTERN std::vector<int> roundKeys;
 EXTERN int potentialKeysL[64];
 EXTERN int potentialKeysR[64];

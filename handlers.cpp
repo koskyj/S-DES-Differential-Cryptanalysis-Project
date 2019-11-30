@@ -66,6 +66,7 @@ void inputHandle(int choice) {
 }
 void init() {
 	key = 0;
+	numRounds = 2;
 	Sbox0[0][0] = 1;
 	Sbox0[0][1] = 0;
 	Sbox0[0][2] = 2;

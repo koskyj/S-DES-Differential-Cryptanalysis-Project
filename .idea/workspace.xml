@@ -12,9 +12,6 @@
     <list default="true" id="56ae8b96-379a-41a0-aa8e-cc2d8210c92f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/analysis.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/analysis.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis.h" beforeDir="false" afterPath="$PROJECT_DIR$/analysis.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/globals.h" beforeDir="false" afterPath="$PROJECT_DIR$/globals.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output" beforeDir="false" afterPath="$PROJECT_DIR$/output" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -76,6 +73,8 @@
       <workItem from="1574095953635" duration="19780000" />
       <workItem from="1574901069876" duration="2707000" />
       <workItem from="1575053560687" duration="5890000" />
+      <workItem from="1575149577581" duration="162000" />
+      <workItem from="1575220875796" duration="991000" />
     </task>
     <servers />
   </component>

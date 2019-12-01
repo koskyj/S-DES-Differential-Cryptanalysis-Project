@@ -291,7 +291,7 @@ void keyVoting() {
         int initialPermutation[] = {7, 6, 4, 0, 2, 5, 1, 3};
 
         //Test Hex 1-16
-        for (int j = 0; j < 16; j++) {
+        for (int j = 0; j < 256; j++) {
             for (int k = 0; k < 16; k++) {
                 //Initial permutation of input 1 j
                 int roundIn1 = bitChange(j, initialPermutation, 8);
@@ -404,14 +404,18 @@ void checkTestKeys() {
     cout << "***** Checking key voting *****" << endl;
     bool hit = false;
     for (int i=0; i<numRounds; i++) {
+        cout << "roundKeys[" << i << "] is " << roundKeys[i];
         for (int j=0; j<testKeys[i].size(); j++) {
             if (roundKeys[i] == testKeys[i][j]) {
                 hit = true;
             }
-            if (hit == true) {
-                cout << "roundKeys[" << i << "] is " << roundKeys[i] << " and found in the voted keys." << endl;
-                hit = false;
-            }
+        }
+
+        if (hit == true) {
+            cout << " and FOUND in the voted keys." << endl;
+            hit = false;
+        } else {
+            cout << " and NOT FOUND in the voted keys." << endl;
         }
     }
 }

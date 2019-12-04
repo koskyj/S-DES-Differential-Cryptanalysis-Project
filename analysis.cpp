@@ -137,12 +137,18 @@ void findBestDifferencePairs() {
 }
 
 int invRoundKeyPermute(int r2key) {
+    //Perm used for keyPermute int PC2[] = { 3, 1, 7, 5, 0, 6, 4, 2 };
 	int invRoundPerm[8] = {4, 1, 7, 0, 6, 3, 5, 2 };
 	int rval = bitChange(r2key, invRoundPerm, 8);
 	return rval;
 }
 
 void analyze() {
+    if (key == NULL) {
+        cout << "No key, please enter input one (Option 1)." << endl;
+        return;
+    }
+    /*
 	int counter = 0;
 	int r2keyguess = 0;
 	int inputCharacteristic;
@@ -168,7 +174,7 @@ void analyze() {
 	outputCharacteristic = bitChange(outputCharacteristic, invInitialPermutation, 8);
 
 	//int characteristic[2] = { inputCharacteristic, outputCharacteristic };
-	
+
 	cout << "Once the characteristics have been obtained, a partial subkey can be extracted by comparing plaintext and its corresponding ciphertext through the last round." << endl;
 	// input and encrypt values 0 through 255
 	keySchedule(key);
@@ -272,8 +278,10 @@ void analyze() {
 	else {
 		cout << "No valid keys found :(" << endl;
 	}
-	cout << endl;
+	cout << endl;*/
 	cout << "**** Key voting ****" << endl;
+    cout << "(This may take some time)" << endl;
+    keySchedule(key);
 	keyVoting();
 }
 
@@ -286,15 +294,14 @@ void keyVoting() {
 
     //Get current round keys
     for (int i = 0; i < numRounds; i++) {
-
         //From encryption.cpp
         int initialPermutation[] = {7, 6, 4, 0, 2, 5, 1, 3};
 
-        //Test Hex 1-16
         for (int j = 0; j < 256; j++) {
-            for (int k = 0; k < 16; k++) {
+            for (int k = 0; k < 256; k++) {
                 //Initial permutation of input 1 j
                 int roundIn1 = bitChange(j, initialPermutation, 8);
+
                 //Seperate input 1 j to left and right sides
                 int LR1[] = {0, 0};
                 //Left half input 1
@@ -313,6 +320,7 @@ void keyVoting() {
                 LR2[1] = roundIn2 & 0x0f;
                 w2 = LR2[1];
 
+
                 //Use two inputs and found ws to find deltaw
                 deltaw = (w1 ^ w2);
 
@@ -327,8 +335,10 @@ void keyVoting() {
                 //Use two inputs and found ys to find deltay using XOR
                 deltay = (y1 ^ y2);
 
+
                 //Iterate through 256 possible keys
                 for (int l = 0; l < 256; l++) {
+
                     //XOR w1 with guess of key to get x1 prime
                     x1prime = (w1 ^ l);
                     //XOR w2 with guess of key to get x2 prime
@@ -373,6 +383,7 @@ void keyVoting() {
             temp = 0;
         }
 
+
         //Find all test keys that are hit the maximum amount of times and push to maxKeys vector
         vector<int> maxKeys;
         for (int o = 0; o < 256; o++) {
@@ -395,17 +406,118 @@ void keyVoting() {
         hit = false;
         testKeys.push_back(maxKeys);
         maxKeys.clear();
+
     }
+/*
+    if (numRounds == 3) {
+        int prevhalf[2];
+        findMasterKey(testKeys[0].size(),testKeys[1].size(),testKeys[2].size(), prevhalf);
+    }*/
     checkTestKeys();
 }
+/*
+void findMasterKey(int sizeOf0, int sizeOf1, int sizeOf2, int prevhalf[2]) {
+
+    cout << testKeys[0][sizeOf0] << " " << testKeys[1][sizeOf1] << " " << testKeys[2][sizeOf2] << endl;
+    int half[2];
+    int half1[2];
+    int half2[2];
+    int invPbox[] = {1, 0, 3, 2}; // pbox is same fwd and bckwd
+
+    int temp = invRoundKeyPermute(testKeys[2][sizeOf2]);
+
+    half[0] = temp >> 16;
+    half[1] = temp & 0xffff;
+
+    half[0] += half[0] << 5; //add bit shifted out left
+    half[1] += half[0] << 5; //add bit shifted out left
+
+    half[0] >>= 3;
+    half[1] >>= 3;
+
+    prevhalf[0] = half[0];
+    prevhalf[1] = half[1];
+
+    int temp1 = invRoundKeyPermute(testKeys[1][sizeOf1]);
+
+    half1[0] = (temp1 & 0x0F) | prevhalf[0];
+    half1[1] = (temp1 >> 4) | prevhalf[1];
+
+    half1[0] += half1[0] << 5; //add bit shifted out left
+    half1[1] += half1[0] << 5; //add bit shifted out left
+
+    //Shift left by number of rounds
+    half1[0] >>= 2;
+    half1[1] >>= 2;
+
+    //Set starting half keys for next round
+    prevhalf[0] = half1[0];
+    prevhalf[1] = half1[1];
+
+    int temp2 = invRoundKeyPermute(testKeys[0][sizeOf0]);
+    half2[0] = (temp2 & 0x0F) | prevhalf[0];
+    half2[1] = (temp2 >> 4) | prevhalf[1];
+
+    half2[0] += half2[0] << 5; //add bit shifted out left
+    half2[1] += half2[0] << 5; //add bit shifted out left
+
+    //Shift left by number of rounds
+    half2[0] >>= 1;
+    half2[1] >>= 1;
+
+    //Set starting half keys for next round
+    prevhalf[0] = half2[0];
+    prevhalf[1] = half2[1];
+
+    int l = bitChange(prevhalf[0], invPbox, 4);
+    int r = bitChange(prevhalf[1], invPbox, 4);
+
+    int testMasterKey = ((l << 8) | r);
+    keySchedule(key);
+    //cout << key << " ";
+    int real = encrypt(0);
+    //cout << real << " ";
+    keySchedule(testMasterKey);
+    //cout << testMasterKey << " ";
+    int test = encrypt(0);
+    //cout << test << " ";
+    //cout << endl;
+    if (real == test) {
+        if (find(potKeys.begin(), potKeys.end(), testMasterKey) == potKeys.end()) {
+            potKeys.push_back(testMasterKey);
+        }
+    }
+
+    if (sizeOf0 > 0) {
+        sizeOf0--;
+        findMasterKey(sizeOf0, sizeOf1, sizeOf2, prevhalf);
+    } else {
+        if (sizeOf1 > 0) {
+            sizeOf0 = testKeys[0].size();
+            sizeOf1--;
+            findMasterKey(sizeOf0, sizeOf1, sizeOf2, prevhalf);
+        } else {
+            if (sizeOf2 > 0) {
+                sizeOf1 = testKeys[1].size();
+                sizeOf2--;
+                findMasterKey(sizeOf0, sizeOf1, sizeOf2, prevhalf);
+            } else {
+                return;
+            }
+        }
+    }
+}*/
+
 
 
 void checkTestKeys() {
+    cout << endl;
     cout << "***** Checking key voting *****" << endl;
     bool hit = false;
-    for (int i=0; i<numRounds; i++) {
+    bool hit2 = false;
+    for (int i = 0; i < numRounds; i++) {
         cout << "roundKeys[" << i << "] is " << roundKeys[i];
-        for (int j=0; j<testKeys[i].size(); j++) {
+        for (int j = 0; j < testKeys[i].size(); j++) {
             if (roundKeys[i] == testKeys[i][j]) {
                 hit = true;
             }
@@ -416,6 +528,20 @@ void checkTestKeys() {
             hit = false;
         } else {
             cout << " and NOT FOUND in the voted keys." << endl;
+        }
+    }
+    if (potKeys.size() != 0) {
+        cout << "From keyVoting and reverse scheduling potential master keys are: ";
+        for (int k = 0; k < potKeys.size(); k++) {
+            cout << potKeys[k] << " ";
+            if (key == potKeys[k]) {
+                hit2 = true;
+            }
+        }
+        cout << endl;
+        cout << "Real key is " << key << endl;
+        if (hit2 == true) {
+            cout << "The real key was found" << endl;
         }
     }
 }

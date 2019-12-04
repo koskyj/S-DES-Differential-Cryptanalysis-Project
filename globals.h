@@ -15,6 +15,7 @@ EXTERN int inputCharacteristic;
 EXTERN int outputCharacteristic;
 EXTERN int numRounds;
 EXTERN std::vector<int> roundKeys;
+EXTERN std::vector<int> potKeys;
 EXTERN int potentialKeysL[64];
 EXTERN int potentialKeysR[64];
 EXTERN int encryptedPairs[256];

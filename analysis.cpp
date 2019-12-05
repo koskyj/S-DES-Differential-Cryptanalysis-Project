@@ -337,7 +337,7 @@ void keyVoting() {
 
 
                 //Iterate through 256 possible keys
-                for (int l = 0; l < 40320; l++) {
+                for (int l = 0; l < 256; l++) {
 
                     //XOR w1 with guess of key to get x1 prime
                     x1prime = (w1 ^ l);

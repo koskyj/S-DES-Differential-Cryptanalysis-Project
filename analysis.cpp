@@ -286,7 +286,6 @@ void analyze() {
 }
 
 void keyVoting() {
-    int w1, w2, deltaw, x1, x2, x1prime, x2prime, deltax, y1, y2, deltay, y1prime, y2prime, deltayprime;
     int countHit = 0;
     int countTotal = 0;
     bool hit = false;
@@ -299,6 +298,7 @@ void keyVoting() {
 
         for (int j = 0; j < 256; j++) {
             for (int k = 0; k < 256; k++) {
+                int w1 = 0, w2 = 0, deltaw = 0, x1 = 0, x2 = 0, x1prime = 0, x2prime = 0, deltax = 0, y1 = 0, y2 = 0, deltay = 0, y1prime = 0, y2prime = 0, deltayprime = 0;
                 //Initial permutation of input 1 j
                 int roundIn1 = bitChange(j, initialPermutation, 8);
 
@@ -337,7 +337,7 @@ void keyVoting() {
 
 
                 //Iterate through 256 possible keys
-                for (int l = 0; l < 256; l++) {
+                for (int l = 0; l < 40320; l++) {
 
                     //XOR w1 with guess of key to get x1 prime
                     x1prime = (w1 ^ l);
@@ -541,22 +541,16 @@ void checkTestKeys() {
     cout << endl;
     cout << "***** Checking key voting *****" << endl;
     bool hit = false;
-    bool hit2 = false;
+    //bool hit2 = false;
     for (int i = 0; i < numRounds; i++) {
-        cout << "roundKeys[" << i << "] is " << roundKeys[i];
         for (int j = 0; j <= testKeys[i].size(); j++) {
             if (roundKeys[i] == testKeys[i][j]) {
                 hit = true;
+                cout << "roundKeys[" << i << "] is and FOUND in the voted keys." << endl;
             }
         }
-
-        if (hit == true) {
-            cout << " and FOUND in the voted keys." << endl;
-            hit = false;
-        } else {
-            cout << " and NOT FOUND in the voted keys." << endl;
-        }
     }
+    testKeys.clear();
     /* Used to print out possible master keys
     if (potKeys.size() != 0) {
         cout << "From keyVoting and reverse scheduling potential master keys are: ";

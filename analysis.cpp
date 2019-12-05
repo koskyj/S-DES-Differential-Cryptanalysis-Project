@@ -298,7 +298,7 @@ void keyVoting() {
 
         for (int j = 0; j < 256; j++) {
             for (int k = 0; k < 256; k++) {
-                int w1 = 0, w2 = 0, deltaw = 0, x1 = 0, x2 = 0, x1prime = 0, x2prime = 0, deltax = 0, y1 = 0, y2 = 0, deltay = 0, y1prime = 0, y2prime = 0, deltayprime = 0;
+                int w1 = 0, w2 = 0, deltaw = 0, x1 = 0, x2 = 0,  y1 = 0, y2 = 0, deltay = 0;
                 //Initial permutation of input 1 j
                 int roundIn1 = bitChange(j, initialPermutation, 8);
 
@@ -338,8 +338,8 @@ void keyVoting() {
 
                 //Iterate through 256 possible keys
                 for (int l = 0; l < 256; l++) {
-
-                    //XOR w1 with guess of key to get x1 prime
+                    int x1prime = 0, x2prime = 0, deltax = 0, y1prime = 0, y2prime = 0, deltayprime = 0;
+                            //XOR w1 with guess of key to get x1 prime
                     x1prime = (w1 ^ l);
                     //XOR w2 with guess of key to get x2 prime
                     x2prime = (w2 ^ l);
@@ -382,6 +382,7 @@ void keyVoting() {
             }
             temp = 0;
         }
+        votedKeys.clear();
 
 
         //Find all test keys that are hit the maximum amount of times and push to maxKeys vector
@@ -408,11 +409,12 @@ void keyVoting() {
         maxKeys.clear();
 
     }
-
+    /*
     if (numRounds == 3) {
         int prevhalf[2];
-        // findMasterKey(testKeys[0].size(),testKeys[1].size(),testKeys[2].size(), prevhalf);
+         findMasterKey(testKeys[0].size(),testKeys[1].size(),testKeys[2].size(), prevhalf);
     }
+    */
     checkTestKeys();
 }
 
@@ -546,7 +548,7 @@ void checkTestKeys() {
         for (int j = 0; j <= testKeys[i].size(); j++) {
             if (roundKeys[i] == testKeys[i][j]) {
                 hit = true;
-                cout << "roundKeys[" << i << "] is and FOUND in the voted keys." << endl;
+                cout << "roundKeys[" << i << "] is " << roundKeys[i] << " and FOUND in the voted keys." << endl;
             }
         }
     }

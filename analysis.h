@@ -9,5 +9,5 @@ void findBestDifferencePairs();
 void analyze();
 void keyVoting();
 void checkTestKeys();
-void findMasterKey(int, int, int, int[2]);
+//void findMasterKey(int, int, int, int[2]);
 #endif

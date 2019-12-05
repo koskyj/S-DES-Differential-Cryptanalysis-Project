@@ -22,7 +22,7 @@ void setKey() {
 	int numRoundInput;
 
   	while(true){
-		cout << "Please enter number of rounds of encryption as an integer value (>2): " << flush;
+		cout << "Please enter number of rounds of encryption as an integer value (>=2): " << flush;
 		cin >> numRoundString;
 
 		numRoundInput = stoi(numRoundString);

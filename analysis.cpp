@@ -411,7 +411,7 @@ void keyVoting() {
 
     if (numRounds == 3) {
         int prevhalf[2];
-        findMasterKey(testKeys[0].size(),testKeys[1].size(),testKeys[2].size(), prevhalf);
+        // findMasterKey(testKeys[0].size(),testKeys[1].size(),testKeys[2].size(), prevhalf);
     }
     checkTestKeys();
 }
